@@ -59,7 +59,6 @@ const HeaderApp = () => {
             </Menu>
           )}
         </Group>
-        <Button onClick={getUserBooks}>Get Bent</Button>
       </Group>
     </Header>
   );

@@ -1,5 +1,6 @@
 import React from "react";
 import "../App.css";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import {
   Navbar,
@@ -41,11 +42,17 @@ const NavBar = () => {
             style={{ width: "100%" }}
           >
             <Navbar.Section>
-              <Button variant="subtle">Home</Button>
+              <Button variant="subtle">
+                <Link to="/">
+                  <Text ta={"center"}>Home</Text>
+                </Link>
+              </Button>
             </Navbar.Section>
 
             <Navbar.Section>
-              <Button variant="subtle">Borrowed</Button>
+              <Button variant="subtle">
+                <Link to="/books">Borrowed</Link>
+              </Button>
             </Navbar.Section>
 
             <Navbar.Section grow>
