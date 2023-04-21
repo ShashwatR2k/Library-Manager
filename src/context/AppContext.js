@@ -117,8 +117,10 @@ export const AppProvider = ({ children }) => {
     const query1 = query(ref(db, "books/"), orderByChild("id"));
 
     return onValue(query1, (snapshot) => {
-      console.log(snapshot.val());
-      setSearch(snapshot.val());
+      let arr = snapshot.val();
+      let arr1 = arr.map((a) => a.title);
+      console.log(arr1);
+      setSearch(arr1);
     });
   };
 
@@ -209,6 +211,7 @@ export const AppProvider = ({ children }) => {
         getUserBooks,
         borrowed,
         search,
+        getDataSearch,
       }}
     >
       {children}
