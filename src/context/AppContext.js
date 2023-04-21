@@ -208,6 +208,7 @@ export const AppProvider = ({ children }) => {
         getDataSearch,
         getUserBooks,
         borrowed,
+        search,
       }}
     >
       {children}
