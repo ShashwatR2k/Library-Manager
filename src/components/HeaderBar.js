@@ -1,6 +1,5 @@
 import React from "react";
 
-import { useLibrary } from "../context/AppContext";
 import {
   Header,
   Group,
@@ -11,15 +10,28 @@ import {
   Button,
 } from "@mantine/core";
 import { MoonStars, Sun } from "tabler-icons-react";
+import { useLibrary } from "../context/AppContext";
+import SearchBar from "./SearchBar";
 const HeaderApp = () => {
-  const { colorScheme, toggleColorScheme, startLogin, name, loggedIn, logOut } =
-    useLibrary();
+  const {
+    colorScheme,
+    toggleColorScheme,
+    startLogin,
+    pfp,
+    name,
+    loggedIn,
+    logOut,
+    borrowBooks,
+    initials,
+    getUserBooks,
+  } = useLibrary();
   return (
     <Header height="4rem" width="100vw" p="xs">
       <Group sx={{ height: "100%" }} px={20} position="apart">
         <Group sx={{ height: "100%" }}>
           <Title order={3}>Library Management</Title>
         </Group>
+        <SearchBar />
         <Group sx={{ height: "100%" }} position="center">
           <ActionIcon variant="default" onClick={toggleColorScheme} size={30}>
             {colorScheme === "dark" ? (
@@ -34,8 +46,8 @@ const HeaderApp = () => {
             <Menu shadow="md" width={200}>
               <Menu.Target>
                 <Button variant="subtle">
-                  <Avatar color="cyan" radius="xl">
-                    MK
+                  <Avatar color="cyan" radius="xl" src={pfp}>
+                    {initials}
                   </Avatar>
                   {name}
                 </Button>
@@ -47,6 +59,7 @@ const HeaderApp = () => {
             </Menu>
           )}
         </Group>
+        <Button onClick={getUserBooks}>Get Bent</Button>
       </Group>
     </Header>
   );

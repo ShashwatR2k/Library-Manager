@@ -19,6 +19,8 @@ import {
   limitToLast,
   startAt,
   endAt,
+  child,
+  update,
 } from "firebase/database";
 export const AppContext = createContext();
 
@@ -33,18 +35,27 @@ export const AppProvider = ({ children }) => {
   const [lastId, setLastId] = useState(0);
   const [currId, setCurrId] = useState(0);
   const [name, setName] = useState("");
+  const [initials, setInitials] = useState("");
   const [pfp, setPfp] = useState("");
   const [credential, setCredential] = useState("");
   const [loggedIn, setLoggedIn] = useState();
   const [callMore, setCallMore] = useState(false);
   const [endList, setEndList] = useState(false);
+  const [search, setSearch] = useState([]);
+  const [borrowed, setBorrowed] = useState([]);
 
   const db = getDatabase(app);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         console.log("onAuthStateChanged");
+        setUid(user.uid);
+        setName(user.displayName);
+        setPfp(user.photoURL);
         setLoggedIn(true);
+        getInitials();
+        getUserBooks();
       } else {
         setLoggedIn(false);
       }
@@ -54,10 +65,6 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     if (callMore && !endList) getFive();
   }, [callMore]);
-
-  useEffect(() => {
-    console.log(books);
-  }, [books]);
 
   useEffect(() => {
     getData();
@@ -81,6 +88,12 @@ export const AppProvider = ({ children }) => {
       });
   }
 
+  const borrowBooks = () => {
+    const updates = {};
+    updates["/users/" + uid] = cart;
+
+    return update(ref(db), updates);
+  };
   const logOut = () => {
     signOut(auth).then(() => {
       setLoggedIn(false);
@@ -100,6 +113,28 @@ export const AppProvider = ({ children }) => {
     });
   };
 
+  const getDataSearch = () => {
+    const query1 = query(ref(db, "books/"), orderByChild("id"));
+
+    return onValue(query1, (snapshot) => {
+      console.log(snapshot.val());
+      setSearch(snapshot.val());
+    });
+  };
+
+  const getUserBooks = () => {
+    const getBookBorr = query(ref(db, "users/" + uid));
+    return onValue(getBookBorr, (snapshot) => {
+      console.log(snapshot.val());
+      let obj = snapshot.val();
+      if (Array.isArray(obj)) {
+        obj = { ...obj };
+      }
+      obj = Object.values(obj);
+      setBorrowed(obj);
+    });
+  };
+
   const getLast = () => {
     const getLastId = query(
       ref(db, "books/"),
@@ -111,6 +146,16 @@ export const AppProvider = ({ children }) => {
     });
   };
 
+  const getInitials = () => {
+    let rgx = new RegExp(/(\p{L}{1})\p{L}+/, "gu");
+
+    let initial = [...name.matchAll(rgx)] || [];
+
+    initial = (
+      (initial.shift()?.[1] || "") + (initial.pop()?.[1] || "")
+    ).toUpperCase();
+    setInitials(initial);
+  };
   const getFive = () => {
     const bookInfiniteScroll = query(
       ref(db, "books/"),
@@ -159,6 +204,10 @@ export const AppProvider = ({ children }) => {
         callMore,
         setCallMore,
         endList,
+        borrowBooks,
+        getDataSearch,
+        getUserBooks,
+        borrowed,
       }}
     >
       {children}

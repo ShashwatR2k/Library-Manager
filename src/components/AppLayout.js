@@ -15,9 +15,12 @@ import { useLibrary } from "../context/AppContext";
 import Home from "./Home";
 import NavBar from "./NavBar";
 import HeaderApp from "./HeaderBar";
-
+import FooterApp from "./FooterBar";
+import PrivateRoute from "./PrivateRoute";
+import Books from "./Books";
 const AppLayout = () => {
-  const { colorScheme, setColorScheme, toggleColorScheme } = useLibrary();
+  const { colorScheme, setColorScheme, toggleColorScheme, loggedIn } =
+    useLibrary();
   return (
     <ColorSchemeProvider
       colorScheme={{
@@ -45,7 +48,7 @@ const AppLayout = () => {
             </MediaQuery>
           }
           header={<HeaderApp />}
-          footer={<Footer height={"3rem"} width="100vw" p="md" />}
+          footer={<FooterApp />}
         >
           <Routes>
             <Route
@@ -57,7 +60,7 @@ const AppLayout = () => {
                 </div>
               }
             />
-            <Route path="/about" element={<div>About</div>} />
+            <Route path="/books" element={<Books />} />
           </Routes>
         </AppShell>
       </MantineProvider>

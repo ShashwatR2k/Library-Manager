@@ -20,7 +20,8 @@ const BooksList = ({ fbooks }) => {
 
   function handleClick(book) {
     if (!book?.inCart) {
-      setCart([...cart, { title: book.title, id: book.id }]);
+      console.log(book);
+      setCart([...cart, book]);
       let arr1 = books.map((b) => {
         if (book.id === b.id) b.inCart = 1;
         return b;
@@ -103,6 +104,7 @@ const BooksList = ({ fbooks }) => {
                         })[0]?.inCart
                           ? "Remove From Cart"
                           : "Add to Cart"}
+                        {console.log()}
                       </Button>
                     </Grid.Col>
                   </Grid>
