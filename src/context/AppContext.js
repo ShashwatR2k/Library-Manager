@@ -55,6 +55,10 @@ export const AppProvider = ({ children }) => {
     if (callMore && !endList) getFive();
   }, [callMore]);
 
+  useEffect(() => {
+    getData;
+  }, [callMore]);
+
   function startLogin() {
     signInWithPopup(auth, provider)
       .then((result) => {
@@ -79,27 +83,31 @@ export const AppProvider = ({ children }) => {
     });
   };
   const getData = () => {
-    console.log("hi");
-    const query1 = ref(db, "books");
+    const query1 = query(
+      ref(db, "books/"),
+      orderByChild("id"),
+      startAt(1),
+      endAt(10)
+    );
+
     return onValue(query1, (snapshot) => {
       setBooks(snapshot.val());
-      console.log(snapshot.val());
+      setCurrId(10);
     });
   };
 
   const getLast = () => {
-    const topUserPostsRef = query(
+    const getLastId = query(
       ref(db, "books/"),
       orderByChild("id"),
       limitToLast(1)
     );
-    return onValue(topUserPostsRef, (snapshot) => {
+    return onValue(getLastId, (snapshot) => {
       setLastId(parseInt(Object.keys(snapshot.val())[0]));
     });
   };
 
   const getFive = () => {
-    console.log("getFive");
     const bookInfiniteScroll = query(
       ref(db, "books/"),
       orderByChild("id"),
