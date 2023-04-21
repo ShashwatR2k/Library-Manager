@@ -8,12 +8,6 @@ const SearchBar = () => {
 
   const handleSearch = (event) => {
     if (event.key === "Enter") {
-      search.filter((item) => {
-        return Object.values(item)
-          .join("")
-          .toLowerCase()
-          .includes(searchInput.toLowerCase());
-      });
     }
   };
 
