@@ -12,17 +12,8 @@ import {
 } from "@mantine/core";
 import { MoonStars, Sun } from "tabler-icons-react";
 const HeaderApp = () => {
-  const {
-    colorScheme,
-    toggleColorScheme,
-    startLogin,
-    pfp,
-    name,
-    loggedIn,
-    logOut,
-    getData,
-    getFive,
-  } = useLibrary();
+  const { colorScheme, toggleColorScheme, startLogin, name, loggedIn, logOut } =
+    useLibrary();
   return (
     <Header height="4rem" width="100vw" p="xs">
       <Group sx={{ height: "100%" }} px={20} position="apart">
@@ -55,7 +46,6 @@ const HeaderApp = () => {
               </Menu.Dropdown>
             </Menu>
           )}
-          <Button onClick={getFive}>Get Data</Button>
         </Group>
       </Group>
     </Header>

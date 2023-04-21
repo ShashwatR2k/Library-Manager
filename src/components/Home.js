@@ -42,21 +42,21 @@ const Home = () => {
         </Tabs.Panel>
         <Tabs.Panel value="Fiction" pt="xs">
           <BooksList
-            books={books?.filter((value) => {
+            fbooks={books?.filter((value) => {
               if (value.type == "Fiction") return value;
             })}
           />
         </Tabs.Panel>
         <Tabs.Panel value="Non-Fiction" pt="xs">
           <BooksList
-            books={books?.filter((value) => {
-              if (value.type == "Non-Fiction") return value;
+            fbooks={books?.filter((value) => {
+              if (value.type == "Non-fiction") return value;
             })}
           />
         </Tabs.Panel>
         <Tabs.Panel value="Motivational" pt="xs">
           <BooksList
-            books={books?.filter((value) => {
+            fbooks={books?.filter((value) => {
               if (value.type == "Motivational") return value;
             })}
           />

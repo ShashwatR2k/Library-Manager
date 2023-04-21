@@ -56,8 +56,12 @@ export const AppProvider = ({ children }) => {
   }, [callMore]);
 
   useEffect(() => {
-    getData;
-  }, [callMore]);
+    console.log(books);
+  }, [books]);
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   function startLogin() {
     signInWithPopup(auth, provider)
@@ -87,12 +91,12 @@ export const AppProvider = ({ children }) => {
       ref(db, "books/"),
       orderByChild("id"),
       startAt(1),
-      endAt(10)
+      endAt(8)
     );
 
     return onValue(query1, (snapshot) => {
       setBooks(snapshot.val());
-      setCurrId(10);
+      setCurrId(8);
     });
   };
 
