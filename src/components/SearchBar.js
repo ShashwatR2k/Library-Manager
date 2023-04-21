@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Input, Button, Container, Flex } from "@mantine/core";
 import { Search } from "tabler-icons-react";
+import { useLibrary } from "../context/AppContext";
 const SearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
-
+  const { search } = useLibrary();
   const handleSearchInput = (event) => {
     setSearchQuery(event.target.value);
   };
