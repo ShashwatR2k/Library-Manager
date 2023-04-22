@@ -16,8 +16,7 @@ import Home from "./Home";
 import NavBar from "./NavBar";
 import HeaderApp from "./HeaderBar";
 import FooterApp from "./FooterBar";
-import PrivateRoute from "./PrivateRoute";
-import Books from "./Books";
+import BorrowedBooks from "./BooksBorrowed";
 const AppLayout = () => {
   const { colorScheme, setColorScheme, toggleColorScheme, loggedIn } =
     useLibrary();
@@ -51,16 +50,8 @@ const AppLayout = () => {
           footer={<FooterApp />}
         >
           <Routes>
-            <Route
-              exact
-              path="/"
-              element={
-                <div style={{ height: "max-content" }}>
-                  <Home />
-                </div>
-              }
-            />
-            <Route path="/books" element={<Books />} />
+            <Route exact path="/" element={<Home />} />
+            <Route path="/books" element={<BorrowedBooks />} />
           </Routes>
         </AppShell>
       </MantineProvider>

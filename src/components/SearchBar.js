@@ -1,26 +1,30 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input, Button, Container, Flex } from "@mantine/core";
 import { Search } from "tabler-icons-react";
 import { useLibrary } from "../context/AppContext";
 const SearchBar = () => {
-  const { search, getDataSearch } = useLibrary();
-  const [value, setValue] = useState("");
+  const {
+    search,
+    getDataSearch,
+    filterParam,
+    searchtext,
+    setSearchText,
+    searchInArray,
+  } = useLibrary();
 
   const handleSearch = (event) => {
-    if (event.key === "Enter") {
-    }
+    setSearchText(event.currentTarget.value);
   };
 
   return (
     <>
       <Flex direction={{ base: "column", sm: "row" }} gap="sm" align="center">
         <Input
-          value={value}
+          value={searchtext}
           icon={<Search size={18} />}
           placeholder="Search"
           radius="xl"
-          onChange={(event) => setValue(event.currentTarget.value)}
-          onKeyPress={handleSearch}
+          onChange={(event) => handleSearch(event)}
         />
       </Flex>
     </>

@@ -32,6 +32,7 @@ export const AppProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [uid, setUid] = useState("");
   const [books, setBooks] = useState([]);
+  const [filterParam, setFilterParam] = useState(["title"]);
   const [lastId, setLastId] = useState(0);
   const [currId, setCurrId] = useState(0);
   const [name, setName] = useState("");
@@ -43,6 +44,8 @@ export const AppProvider = ({ children }) => {
   const [endList, setEndList] = useState(false);
   const [search, setSearch] = useState([]);
   const [borrowed, setBorrowed] = useState([]);
+  const [searchtext, setSearchText] = useState("");
+  const [allBooks, setAllBooks] = useState([]);
 
   const db = getDatabase(app);
 
@@ -67,8 +70,22 @@ export const AppProvider = ({ children }) => {
   }, [callMore]);
 
   useEffect(() => {
-    getData();
+    getAllBooks();
+    getDataSearch();
+    let arr = allBooks;
+    console.log(allBooks);
+    setBooks(arr);
   }, []);
+  useEffect(() => {
+    searchtext
+      ? setBooks(searchInArray(searchtext, search, filterParam))
+      : setBooks(allBooks);
+  }, [searchtext]);
+  useEffect(() => {
+    console.log(allBooks);
+    let arr = allBooks;
+    setBooks(allBooks);
+  }, [allBooks]);
 
   function startLogin() {
     signInWithPopup(auth, provider)
@@ -99,7 +116,7 @@ export const AppProvider = ({ children }) => {
       setLoggedIn(false);
     });
   };
-  const getData = () => {
+  const getAllBooks = () => {
     const query1 = query(
       ref(db, "books/"),
       orderByChild("id"),
@@ -108,7 +125,7 @@ export const AppProvider = ({ children }) => {
     );
 
     return onValue(query1, (snapshot) => {
-      setBooks(snapshot.val());
+      setAllBooks(snapshot.val());
       setCurrId(8);
     });
   };
@@ -119,15 +136,14 @@ export const AppProvider = ({ children }) => {
     return onValue(query1, (snapshot) => {
       let arr = snapshot.val();
       let arr1 = arr.map((a) => a.title);
-      console.log(arr1);
-      setSearch(arr1);
+
+      setSearch(arr);
     });
   };
 
   const getUserBooks = () => {
     const getBookBorr = query(ref(db, "users/" + uid));
     return onValue(getBookBorr, (snapshot) => {
-      console.log(snapshot.val());
       let obj = snapshot.val();
       if (Array.isArray(obj)) {
         obj = { ...obj };
@@ -166,14 +182,15 @@ export const AppProvider = ({ children }) => {
       endAt(currId + 3)
     );
     return onValue(bookInfiniteScroll, (snapshot) => {
+      console.log("Infinite Scroll Called");
       let obj = snapshot.val();
       if (obj !== null) {
         if (Array.isArray(obj)) {
           obj = { ...obj };
         }
         obj = Object.values(obj);
-        let arr1 = [...books];
-        setBooks([...arr1, ...obj]);
+        let arr1 = [...allBooks];
+        setAllBooks([...arr1, ...obj]);
         setCurrId(currId + 3);
         setCallMore(false);
       } else {
@@ -181,7 +198,31 @@ export const AppProvider = ({ children }) => {
       }
     });
   };
+  const searchInArray = (searchQuery, array, objectKeys = null) => {
+    return objectKeys
+      .map((objectKey) => {
+        return array.filter((d) => {
+          let data = objectKey ? d[objectKey] : d; //Incase If It's Array Of Objects.
+          let dataWords =
+            typeof data == "string" &&
+            data
+              ?.split(" ")
+              ?.map((b) => b && b.toLowerCase().trim())
+              .filter((b) => b);
+          let searchWords =
+            typeof searchQuery == "string" &&
+            searchQuery
+              ?.split(" ")
+              .map((b) => b && b.toLowerCase().trim())
+              .filter((b) => b);
 
+          return searchWords.every((v) =>
+            dataWords.some((dataWord) => dataWord.includes(v))
+          );
+        });
+      })
+      .flat(1);
+  };
   return (
     <AppContext.Provider
       value={{
@@ -200,7 +241,7 @@ export const AppProvider = ({ children }) => {
         name,
         pfp,
         loggedIn,
-        getData,
+        getAllBooks,
         getLast,
         getFive,
         callMore,
@@ -212,6 +253,11 @@ export const AppProvider = ({ children }) => {
         borrowed,
         search,
         getDataSearch,
+        filterParam,
+        setFilterParam,
+        searchtext,
+        setSearchText,
+        searchInArray,
       }}
     >
       {children}

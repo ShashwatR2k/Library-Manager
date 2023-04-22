@@ -10,7 +10,7 @@ import {
   Card,
   Flex,
 } from "@mantine/core";
-const Books = () => {
+const BorrowedBooks = () => {
   const { borrowed } = useLibrary();
 
   return (
@@ -22,7 +22,7 @@ const Books = () => {
         direction="row"
         wrap="wrap"
       >
-        {borrowed?.map((book) => {
+        {borrowed[0]?.map((book) => {
           return (
             <Card
               shadow="sm"
@@ -67,4 +67,4 @@ const Books = () => {
     </ScrollArea>
   );
 };
-export default Books;
+export default BorrowedBooks;
