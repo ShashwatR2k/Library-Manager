@@ -11,7 +11,7 @@ import {
   Flex,
 } from "@mantine/core";
 const BorrowedBooks = () => {
-  const { borrowed } = useLibrary();
+  const { booksBorrowed, returnBooks } = useLibrary();
 
   return (
     <ScrollArea>
@@ -22,7 +22,7 @@ const BorrowedBooks = () => {
         direction="row"
         wrap="wrap"
       >
-        {borrowed[0]?.map((book) => {
+        {booksBorrowed?.map((book) => {
           return (
             <Card
               shadow="sm"
@@ -57,6 +57,9 @@ const BorrowedBooks = () => {
                 fullWidth
                 mt="md"
                 radius="md"
+                onClick={() => {
+                  returnBooks(book.id);
+                }}
               >
                 Return Now
               </Button>

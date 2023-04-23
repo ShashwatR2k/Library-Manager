@@ -1,14 +1,16 @@
 import React, { useRef } from "react";
 import { useState } from "react";
-import { Tabs, ScrollArea } from "@mantine/core";
+import { Tabs, ScrollArea, Checkbox, Group } from "@mantine/core";
 import { Sun, Photo, MessageCircle, Settings } from "tabler-icons-react";
 import { useLibrary } from "../context/AppContext";
 import BooksList from "./BookList";
 const Home = () => {
   const viewport = useRef(null);
-  const { books, setCallMore, endList } = useLibrary();
+  const { books, getFive, endList } = useLibrary();
+
   return (
     <ScrollArea
+      h={540}
       type="scroll"
       scrollbarSize={8}
       scrollHideDelay={300}
@@ -18,7 +20,9 @@ const Home = () => {
           y + viewport.current.clientHeight >=
           viewport.current.scrollHeight - 25
         ) {
-          if (!endList) setCallMore(true);
+          if (!endList) {
+            getFive();
+          }
         }
       }}
     >
