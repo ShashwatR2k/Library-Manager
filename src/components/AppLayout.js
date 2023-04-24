@@ -3,10 +3,8 @@ import "../App.css";
 import { Route, Routes } from "react-router-dom";
 import {
   AppShell,
-  Footer,
   Aside,
   MediaQuery,
-  ScrollArea,
   MantineProvider,
   ColorSchemeProvider,
 } from "@mantine/core";
@@ -17,9 +15,9 @@ import NavBar from "./NavBar";
 import HeaderApp from "./HeaderBar";
 import FooterApp from "./FooterBar";
 import BorrowedBooks from "./BooksBorrowed";
+import DonateBooks from "./DonateBooks";
 const AppLayout = () => {
-  const { colorScheme, setColorScheme, toggleColorScheme, loggedIn } =
-    useLibrary();
+  const { colorScheme, toggleColorScheme } = useLibrary();
   return (
     <ColorSchemeProvider
       colorScheme={{
@@ -52,6 +50,7 @@ const AppLayout = () => {
           <Routes>
             <Route exact path="/" element={<Home />} />
             <Route path="/books" element={<BorrowedBooks />} />
+            <Route path="/donate" element={<DonateBooks />} />
           </Routes>
         </AppShell>
       </MantineProvider>

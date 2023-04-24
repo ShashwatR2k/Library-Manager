@@ -10,6 +10,13 @@ import {
   signOut,
 } from "firebase/auth";
 import {
+  getStorage,
+  getDownloadURL,
+  ref as sRef,
+  uploadBytes,
+} from "firebase/storage";
+
+import {
   getDatabase,
   ref,
   onValue,
@@ -47,7 +54,17 @@ export const AppProvider = ({ children }) => {
   const [searchtext, setSearchText] = useState("");
   const [allBooks, setAllBooks] = useState([]);
 
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [description, setDescription] = useState("");
+  const [type, setType] = useState("");
+  const [rating, setRating] = useState("");
+  const [genre, setGenre] = useState([]);
+  const [searchValue, onSearchChange] = useState("");
+  const [file, setFile] = useState(null);
   const db = getDatabase(app);
+
+  const storage = getStorage(app);
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -69,6 +86,7 @@ export const AppProvider = ({ children }) => {
     getDataSearch();
     let arr = allBooks;
     setBooks(arr);
+    getLast();
   }, []);
 
   useEffect(() => {
@@ -88,11 +106,11 @@ export const AppProvider = ({ children }) => {
       const getBookBorrowed = query(ref(db, "books/" + id));
       return onValue(getBookBorrowed, (snapshot) => {
         let obj = snapshot.val();
-        console.log(obj);
+
         arr.push(obj);
       });
     });
-    console.log(arr);
+
     setBooksBorrowed(arr);
   }, [borrowed]);
   useEffect(() => {
@@ -134,7 +152,7 @@ export const AppProvider = ({ children }) => {
     });
   };
 
-  const borrowBooks = () => {
+  const borrowBooks = async () => {
     const updates = {};
     cart.forEach((book) => {
       updates["/users/" + uid + "/" + book.id] = true;
@@ -207,7 +225,7 @@ export const AppProvider = ({ children }) => {
       limitToLast(1)
     );
     return onValue(getLastId, (snapshot) => {
-      setLastId(parseInt(Object.keys(snapshot.val())[0]));
+      setLastId(parseInt(Object.keys(snapshot.val())[0]) + 1);
     });
   };
 
@@ -216,17 +234,18 @@ export const AppProvider = ({ children }) => {
       const getBookId = query(ref(db, "users/" + uid));
       return onValue(getBookId, (snapshot) => {
         let obj = snapshot.val();
+        if (obj !== null) {
+          if (Array.isArray(obj)) {
+            obj = { ...obj };
+          }
 
-        if (Array.isArray(obj)) {
-          obj = { ...obj };
+          let keys = Object.keys(obj);
+          let filtered = keys.filter(function (key) {
+            return obj[key];
+          });
+
+          setBorrowed(filtered);
         }
-        console.log("snapshot", obj);
-        let keys = Object.keys(obj);
-        let filtered = keys.filter(function (key) {
-          return obj[key];
-        });
-        console.log(keys, filtered);
-        setBorrowed(filtered);
       });
     }
   };
@@ -260,6 +279,38 @@ export const AppProvider = ({ children }) => {
       return index === arr.findIndex((o) => obj.id === o.id);
     });
   };
+
+  async function uploadImg(result, name, file) {
+    const storageRef = sRef(storage, name);
+    let imgUrl;
+    await uploadBytes(storageRef, file).then((snapshot) => {
+      console.log("Uploaded a blob or file!");
+    });
+    await getDownloadURL(storageRef)
+      .then((url) => {
+        console.log(url.split("&token")[0]);
+        imgUrl = url.split("&token")[0];
+      })
+      .catch((error) => {
+        // Handle any errors
+      });
+
+    result.imageUrl = imgUrl;
+    result.id = lastId;
+    const updates = {};
+    updates["/books/" + lastId] = result;
+    return update(ref(db), updates).then(() => {
+      getLast();
+      setTitle("");
+      setAuthor("");
+      setType("");
+      setDescription("");
+      setRating("");
+      setGenre("");
+      setFile(null);
+    });
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -281,7 +332,6 @@ export const AppProvider = ({ children }) => {
         getAllBooks,
         getLast,
         getFive,
-
         endList,
         borrowBooks,
         getDataSearch,
@@ -296,6 +346,21 @@ export const AppProvider = ({ children }) => {
         searchInArray,
         booksBorrowed,
         returnBooks,
+        uploadImg,
+        title,
+        setTitle,
+        author,
+        setAuthor,
+        description,
+        setDescription,
+        type,
+        setType,
+        rating,
+        setRating,
+        genre,
+        setGenre,
+        file,
+        setFile,
       }}
     >
       {children}

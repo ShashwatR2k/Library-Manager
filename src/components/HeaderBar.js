@@ -21,9 +21,7 @@ const HeaderApp = () => {
     name,
     loggedIn,
     logOut,
-    borrowBooks,
     initials,
-    getUserBooks,
   } = useLibrary();
   return (
     <Header height="4rem" width="100vw" p="xs">

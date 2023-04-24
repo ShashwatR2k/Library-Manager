@@ -56,7 +56,9 @@ const NavBar = () => {
             </Navbar.Section>
 
             <Navbar.Section grow>
-              <Button variant="subtle">Configurations</Button>
+              <Button variant="subtle">
+                <Link to="/donate">Donate</Link>
+              </Button>
             </Navbar.Section>
             {cart.length && (
               <Navbar.Section sx={{ paddingBottom: "7.5rem", width: "100%" }}>

@@ -14,7 +14,7 @@ import {
   Paper,
   ScrollArea,
 } from "@mantine/core";
-import { Sun } from "tabler-icons-react";
+import { DotsVertical } from "tabler-icons-react";
 const BooksList = ({ fbooks }) => {
   const { cart, setCart, books, setBooks } = useLibrary();
   const viewport = useRef(null);
@@ -47,7 +47,7 @@ const BooksList = ({ fbooks }) => {
       <Box sx={{ display: "flex", alignItems: "flex-start" }}>
         <Accordion.Control {...props} />
         <ActionIcon size="lg" style={{ marginLeft: "-2rem" }}>
-          <Sun size={200} />
+          <DotsVertical size={100} />
         </ActionIcon>
       </Box>
     );

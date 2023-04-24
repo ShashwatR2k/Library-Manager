@@ -1,7 +1,13 @@
 import React, { useRef } from "react";
 import { useState } from "react";
 import { Tabs, ScrollArea, Checkbox, Group } from "@mantine/core";
-import { Sun, Photo, MessageCircle, Settings } from "tabler-icons-react";
+import {
+  School,
+  Photo,
+  MessageCircle,
+  Pokeball,
+  BuildingCastle,
+} from "tabler-icons-react";
 import { useLibrary } from "../context/AppContext";
 import BooksList from "./BookList";
 const Home = () => {
@@ -31,14 +37,17 @@ const Home = () => {
           <Tabs.Tab value="All" icon={<Photo size="0.8rem" />}>
             All
           </Tabs.Tab>
-          <Tabs.Tab value="Fiction" icon={<MessageCircle size="0.8rem" />}>
+          <Tabs.Tab value="Fiction" icon={<BuildingCastle size="0.8rem" />}>
             Fiction
           </Tabs.Tab>
-          <Tabs.Tab value="Non-Fiction" icon={<Settings size="0.8rem" />}>
+          <Tabs.Tab value="Non-Fiction" icon={<School size="0.8rem" />}>
             Non-Fiction
           </Tabs.Tab>
           <Tabs.Tab value="Motivational" icon={<MessageCircle size="0.8rem" />}>
             Motivational
+          </Tabs.Tab>
+          <Tabs.Tab value="Manga" icon={<Pokeball size="0.8rem" />}>
+            Manga
           </Tabs.Tab>
         </Tabs.List>
         <Tabs.Panel value="All" pt="xs">
@@ -62,6 +71,13 @@ const Home = () => {
           <BooksList
             fbooks={books?.filter((value) => {
               if (value.type == "Motivational") return value;
+            })}
+          />
+        </Tabs.Panel>
+        <Tabs.Panel value="Manga" pt="xs">
+          <BooksList
+            fbooks={books?.filter((value) => {
+              if (value.type == "Manga") return value;
             })}
           />
         </Tabs.Panel>
