@@ -154,8 +154,16 @@ export const AppProvider = ({ children }) => {
 
   const borrowBooks = async () => {
     const updates = {};
+    const ids = [];
     cart.forEach((book) => {
       updates["/users/" + uid + "/" + book.id] = true;
+      ids.push(book.id);
+    });
+    allBooks.forEach((book) => {
+      if (ids.includes(book.id)) book.inCart = 0;
+    });
+    books.forEach((book) => {
+      if (ids.includes(book.id)) book.inCart = 0;
     });
     setCart([]);
     return update(ref(db), updates).then(() => {
@@ -288,7 +296,6 @@ export const AppProvider = ({ children }) => {
     });
     await getDownloadURL(storageRef)
       .then((url) => {
-        console.log(url.split("&token")[0]);
         imgUrl = url.split("&token")[0];
       })
       .catch((error) => {

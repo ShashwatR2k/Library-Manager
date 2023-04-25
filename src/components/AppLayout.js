@@ -1,14 +1,8 @@
 import React, { useState } from "react";
 import "../App.css";
 import { Route, Routes } from "react-router-dom";
-import {
-  AppShell,
-  Aside,
-  MediaQuery,
-  MantineProvider,
-  ColorSchemeProvider,
-} from "@mantine/core";
-
+import { AppShell, MantineProvider, ColorSchemeProvider } from "@mantine/core";
+import AsideApp from "./AsideBar";
 import { useLibrary } from "../context/AppContext";
 import Home from "./Home";
 import NavBar from "./NavBar";
@@ -35,15 +29,7 @@ const AppLayout = () => {
         <AppShell
           navbarOffsetBreakpoint="sm"
           navbar={<NavBar />}
-          aside={
-            <MediaQuery smallerThan="sm" styles={{ width: "2rem" }}>
-              <Aside
-                p="md"
-                hiddenBreakpoint="sm"
-                width={{ sm: "2rem", lg: "3rem" }}
-              />
-            </MediaQuery>
-          }
+          aside={<AsideApp />}
           header={<HeaderApp />}
           footer={<FooterApp />}
         >
